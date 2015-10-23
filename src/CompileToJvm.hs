@@ -3,5 +3,5 @@ module CompileToJvm (main) where
 import MainUtils
 
 main :: IO ()
-main = compilerMain (\_ -> \_ -> return ()) ()
+main = compilerMain (\_ _ -> return ()) ()
 

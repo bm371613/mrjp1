@@ -1,16 +1,14 @@
-{-# LANGUAGE MultiParamTypeClasses, GeneralizedNewtypeDeriving #-}
 module Check (check, CheckState, emptyCheckState, runCheckMonad) where
 
 import Control.Monad (unless)
 import Control.Monad.Except (Except, MonadError, runExcept, throwError)
-import Control.Monad.State (MonadState, StateT, evalStateT, get, put)
+import Control.Monad.State (MonadState, StateT, evalStateT, get, state)
 import Data.Set (Set, empty, insert, member)
 
 import Bnfc.Absgrammar
 
-data CheckState = CheckState { checkStateVars :: Set String }
-
-emptyCheckState = CheckState empty
+type CheckState = Set String
+emptyCheckState = empty
 
 newtype Check a
     = Check (StateT CheckState (Except String) a)
@@ -26,10 +24,7 @@ instance Checkable Program where
     check (Prog stmts) = mapM_ check stmts
 
 instance Checkable Stmt where
-    check (SAss (Ident s) _) = do
-        state <- get
-        put $ CheckState $ insert s $ checkStateVars state
-        return ()
+    check (SAss (Ident ident) _) = state $ \s -> ((), insert ident s)
     check (SExp e) = check e
 
 checkTwo :: (Checkable c1, Checkable c2) => c1 -> c2 -> Check ()
@@ -44,8 +39,8 @@ instance Checkable Exp where
     check (ExpMul e1 e2) = checkTwo e1 e2
     check (ExpDiv e1 e2) = checkTwo e1 e2
     check (ExpLit _) = return ()
-    check (ExpVar (Ident s)) = do
+    check (ExpVar (Ident ident)) = do
         state <- get
-        unless (member s $ checkStateVars state)
-            $ throwError $ "Undefined variable: " ++ s
+        unless (member ident state)
+            $ throwError $ "Undefined variable: " ++ ident
 
