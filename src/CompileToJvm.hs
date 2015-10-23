@@ -1,5 +1,7 @@
 module CompileToJvm (main) where
 
+import MainUtils
+
 main :: IO ()
-main = return ()
+main = compilerMain (\_ -> \_ -> return ()) ()
 
