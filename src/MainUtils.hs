@@ -12,8 +12,8 @@ import Bnfc.ErrM
 import Compile
 import Check
 
-compilerMain :: (String -> Program -> Compile s ()) -> s -> IO ()
-compilerMain compile state = do
+compilerMain :: (String -> Program -> (s, Compile s a)) -> IO ()
+compilerMain compile = do
     args <- getArgs
     unless (not $ null args) $ do
         hPutStrLn stderr "Missing inputFileName argument."
@@ -30,5 +30,7 @@ compilerMain compile state = do
             hPutStrLn stderr error
             exitFailure
         otherwise -> return ()
-    runCompileMonad (compile inputFileName program) state
+    let (state, compileMonad) = compile inputFileName program
+    runCompileMonad compileMonad state
+    return ()
 

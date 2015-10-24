@@ -12,7 +12,8 @@ executable compile_to_jvm
   main-is:             CompileToJvm.hs
   build-depends:       base ==4.6.*,
                        array ==0.4.0.1,
-                       containers ==0.5.0.0
+                       containers ==0.5.0.0,
+                       filepath ==1.3.0.1
   hs-source-dirs:      src, lib/mtl-2.2.1, lib/transformers-0.4.3.0
   ghc-options:         -main-is CompileToJvm
   extensions:
