@@ -1,0 +1,38 @@
+**Bartosz Marcinkowski, 319476**
+
+Opis rozwiązania
+===
+
+Użyte technologie
+---
+Rozwiązanie jest napisane w Haskellu, z pomocą BNFC oraz pakietów transformers
+i mtl. Dodatkowo użyłem skryptów Bash do napisania plików wykonywalnych.
+
+Struktura projektu
+---
+Kod źródłowy Haskella znajduje się w katalogu `src`. W `src/Bnfc` znajdują się
+(lekko zmodyfikowane) pliki wygenerowane przez BNFC. Pozostałe pliki są
+napisane ręcznie:
+
+ - `Common.hs`: funkcje i struktury pomocnicze niezależne od języka docelowego
+ - `CompileToJvm.hs`, `CompileToLlvn.hs`: kod specyficzny dla języka docelowego
+
+W katalogu `lib` znajduje się plik `jasmin.jar`, oraz źródła używanych pakietów
+Haskella, które nie są zainstalowane na maszynie students:
+
+ - transformers 0.4.3.0
+ - mtl 2.2.1
+
+W korzeniu projektu znajduje się:
+ - `Setup.hs`, `mrjp1.cabal`: pozwalają zbudować projekt narzędziem `cabal`
+ - `Makefile`: buduje buduje projekt do katalogu `dist` narzędziem `cabal`
+ - `insc_jvm`, `insc_llvm`: skrypty, które zapewniają interfejs zgodny ze
+   specyfikacją zadania korzystając ze zbudowanego projektu oraz dodatkowych
+   narzędzi (np. `lli`, `java lib/jasmin.jar`)
+
+Kompilacja i uruchamianie
+---
+Po wywołaniu polecenia `make` w korzeniu projektu, w korzeniu projektu powinien
+pojawić się katalog dist, a pliki wykonywalne `insc_jvm`  oraz `insc_llvm` 
+powinny działać zgodnie ze specyfikacją zadania.
+
