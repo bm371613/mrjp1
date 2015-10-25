@@ -4,7 +4,7 @@ import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.State (get)
 import Data.List (nub)
-import Data.Map (fromList, Map, (!), size)
+import Data.Map (fold, fromList, Map, (!))
 import Data.Maybe (Maybe(..), mapMaybe)
 import System.FilePath.Posix (takeBaseName)
 import Text.Printf (printf)
@@ -118,7 +118,7 @@ instance Emit Program where
             \\n\
             \.method public static main([Ljava/lang/String;)V\n\
             \.limit stack %d\n\
-            \.limit locals %d\n" cn (stackUsage program) (size st)
+            \.limit locals %d\n" cn (stackUsage program) (1 + fold max 0 st)
         mapM_ emit stmts
         liftIO $ putStr "\
             \    return\n\
@@ -129,7 +129,7 @@ instance Emit Program where
 main :: IO ()
 main = compilerMain (\inputFileName program@(Prog stmts) -> 
         (State 
-            (fromList $ zip (nub $ mapMaybe assigned stmts) [0..]) 
+            (fromList $ zip (nub $ mapMaybe assigned stmts) [1..])
             (takeBaseName inputFileName),
         emit program))
     where
