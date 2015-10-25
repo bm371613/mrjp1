@@ -6,8 +6,7 @@ import Data.Map (Map, empty, insert, (!))
 import Text.Printf (printf)
 
 import Bnfc.Absgrammar
-import Compile (Compile)
-import MainUtils
+import Common (Compile, compilerMain)
 
 -- result
 

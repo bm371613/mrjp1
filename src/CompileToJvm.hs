@@ -8,8 +8,7 @@ import Data.Maybe (Maybe(..), mapMaybe)
 import System.FilePath.Posix (takeBaseName)
 
 import Bnfc.Absgrammar
-import Compile (Compile)
-import MainUtils
+import Common (Compile, compilerMain)
 
 -- stack
 
