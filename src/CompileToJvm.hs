@@ -76,7 +76,8 @@ instance Emit Exp where
                 | otherwise                 = printf "ldc %d" l
     emit (ExpVar (Ident ident)) = do
         ix <- symbolIndex ident
-        liftIO $ putStrLn $ printf "    iload %d" ix
+        liftIO $ putStrLn $
+            printf "    iload%s%d" (if ix < 4 then "_" else " ") ix
     emit (ExpAdd e1 e2) = emitBinaryOperation True "iadd" e1 e2
     emit (ExpSub e1 e2) = emitBinaryOperation False "isub" e1 e2
     emit (ExpMul e1 e2) = emitBinaryOperation True "imul" e1 e2
@@ -86,7 +87,8 @@ instance Emit Stmt where
     emit (SAss (Ident ident) e) = do
         emit e
         ix <- symbolIndex ident
-        liftIO $ putStrLn $ printf "    istore %d" ix
+        liftIO $ putStrLn $
+            printf "    istore%s%d" (if ix < 4 then "_" else " ") ix
     emit (SExp e) = if stackUsage e < 2
         then do
             liftIO $ putStrLn
